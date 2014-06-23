@@ -1,0 +1,27 @@
+<div id="page-nav">
+{% if pages.total %}
+{% if pages.has_prev %}<p class="page-nav"><a href="javascript:searchOwner({{pages.prev_num}});">&lt;&lt;Eelmine lk</a>{% else %}&lt;&lt; Eelmine lk{% endif %} |
+{% if pages.has_next %}<a href="javascript:searchOwner({{pages.next_num}});">Järgmine lk &gt;&gt;</a>{% else %}Järgmine lk &gt;&gt;</p>{% endif %}
+{% else %}
+Omanikke pole.
+{% endif %}
+</div> 
+
+<table>
+	<tr><td>Jrnr.</td><td>Isik</td><td>Registrinumber või isikukood</td><td>Osaku suurus ettevõttes</td><td></td><td class="debug">Lisamise aeg</td></tr>
+	{% for page in pages.items %}
+        {% if page.limited==True %}
+            <tr {% if loop.index is divisibleby 2 %}class="evenrow" {% else %} class="oddrow" {% endif %}><td>{{loop.index + (pages.page-1)*pages.per_page}}</td><td>Ettevõte: {{page.name}}</td><td>{{page.regnum}}</td><td>{{page.share}}</td><td>{% if page.founder==True %} asutaja {% endif %}</td><td class="debug">{{page.time_added_to_base}}</td></tr>
+        {% else %}
+            <tr {% if loop.index is divisibleby 2 %}class="evenrow" {% else %} class="oddrow" {% endif %}><td>{{loop.index + (pages.page-1)*pages.per_page}}</td><td>Eraisik: {{page.name}}, {{page.firstname}}</td><td>{{page.regnum}}</td><td>{{page.share}}</td><td>{% if page.founder==True %} asutaja {% endif %}</td><td class="debug">{{page.time_added_to_base}}</td></tr>
+        {% endif %}
+	{% endfor %}
+</table>
+<div id="page-nav">
+{% if pages.total %}
+{% if pages.has_prev %}<p class="page-nav"><a href="javascript:searchOwner({{pages.prev_num}});">&lt;&lt;Eelmine lk</a>{% else %}&lt;&lt; Eelmine lk{% endif %} |
+{% if pages.has_next %}<a href="javascript:searchOwner({{pages.next_num}});">Järgmine lk &gt;&gt;</a>{% else %}Järgmine lk &gt;&gt;</p>{% endif %}
+{% else %}
+Omanikke pole.
+{% endif %}
+</div> 

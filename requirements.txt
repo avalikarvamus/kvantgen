@@ -1,0 +1,12 @@
+Flask
+Flask-Assets
+Flask-Babel
+Flask-Login
+Flask-Script
+Flask-Social
+Flask-Uploads
+Flask-Wtf
+Jinja2
+SQLAlchemy
+Werkzeug
+WTForms

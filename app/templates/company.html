@@ -1,0 +1,28 @@
+<!-- päis ja navigaator -->
+<div id="company">
+	<h2>{{comp.name}}</h2>
+	<div>Ettevõtte: {{comp.name}}</div><a href="/edit/{{comp.id}}" class="btm">Muuda</a>
+    <div id="reg">Registrinumber: {{comp.regnum}}</div>
+    <div id="cap">Omakapital: {{comp.equitycap}}</div>
+    <div id="mkdte">Loomisaeg: {{comp.datemade}}</div>
+    <div class="debug">Kanne loodud: {{comp.time_added_to_base}}</div>
+    <div id="ownlist">
+    <h3>Ettevõtte osanikud:</h3>
+    {% for owner in owner_list %}
+        <div class="own">
+        {% if owner.limited==False %}
+        <div>{{ loop.index }}. Füüsiline isik:</div>
+        <div class="nimi">Perenimi: {{owner.name}}</div>
+        <div>Eesnimi: {{owner.firstname}}</div>
+        <div>Isikukood: {{owner.regnum}}</div>
+        <div>Osakuid: {{owner.share}}</div>
+        {% else %}
+        <div>{{ loop.index }}. Juriidiline isik:</div>
+        <div class="nimi">Nimi: {{owner.name}}</div>
+        <div>Registrinumber: {{owner.regnum}}</div>
+        <div>Osakuid: {{owner.share}}</div>        
+        {% endif %}
+        </div>
+	{% endfor %}
+    </div>
+</div>

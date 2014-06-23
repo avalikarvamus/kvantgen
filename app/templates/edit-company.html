@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="header">
+<h1>Äriregister</h1>
+</div>
+<div class="menu">
+    <a href='/' id='frontPg' class="bt">Esilehele</a>
+</div>
+<div id="message"></div>
+<div id="edit">
+    <form id="renew" method="post">
+    <div id="general">
+        <h2>{{comp.name}}</h2>
+        Uus nimi:<input id="company_name" name="compname" type="text" value="{{comp.name}}" required>
+        <div id="reg">Registrinumber: {{comp.regnum}}</div>
+        <div id="cap">Omakapital: {{comp.equitycap}}</div>
+        Uus omakapital:<input id="company_equitycap" name="equitycap" type="text" value="{{comp.equitycap}}">
+        <div id="mkdte">Loomisaeg: {{comp.datemade}}</div>
+        <div class="debug">Kanne loodud: {{comp.time_added_to_base}}</div>
+    </div>
+    <div id="owners">
+    <h3>Ettevõtte osanikud:</h3>
+    {% for owner in owner_list %}
+        {% if owner.limited==False %}
+        <div>{{ loop.index }}. Füüsiline isik:</div>
+        <div>Perenimi: {{owner.name}}</div>
+        <div>Eesnimi: {{owner.firstname}}</div>
+        <div>Isikukood: {{owner.regnum}}</div>
+        <div>Osaluse suurus: {{owner.share}}</div>
+        <div><input id="owner_equity{{loop.index}}" name="ownerequity{{loop.index}}" type="text" value="{{owner.share}}" required></div>
+        {% else %}
+        <div>{{ loop.index }}. Juriidiline isik:</div>
+        <div>Nimi: {{owner.name}}</div>
+        <div>Registrinumber: {{owner.regnum}}</div>
+        <div>Osaluse suurus: {{owner.share}}</div>
+        <div><input id="owner_equity{{loop.index}}" name="ownerequity{{loop.index}}" type="text" value="{{owner.share}}" required></div>
+        {% endif %}
+	{% endfor %}
+    <!--input id="owner_number" class="miniinp" name="ownernumber" type="text" placeholder="arv"-->
+    <!--a href="javascript:addOwnerRows({{owner_list.length}});" class="bt">Lisa uusi osanikke</a-->
+    </div>
+    <div id="ownertable">
+    </div>
+    <a href="#" class="bt" onclick="$(this).closest('form').submit()">Uuenda info</a>
+	</div>
+    </form>
+</div>
+{% endblock %}

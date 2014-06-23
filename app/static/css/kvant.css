@@ -1,0 +1,78 @@
+#wrapper {
+  margin-right: auto;
+  margin-left: auto;
+  width: 86%;
+  float: left;
+}
+
+#header {
+position: absolute;
+top: 10px;
+left: 30px;
+margin-left: 50px;
+clear: both;
+width: 800px;
+background-color: #F9FBB4;
+-webkit-border-radius: 8px;
+-moz-border-radius: 8px;
+border-radius: 8px;
+}
+
+#universe {
+position: absolute;
+top: 80px;
+left: 80px;
+width: 600px;
+height: 400px;
+background-color: #070707;
+-webkit-border-radius: 8px;
+-moz-border-radius: 8px;
+border-radius: 8px;
+}
+
+#sidebar {
+position: absolute;
+top: 80px;
+left: 690px;
+width: 200px;
+height: 480px;
+background-color: #F9FBB4;
+-webkit-border-radius: 8px;
+-moz-border-radius: 8px;
+border-radius: 8px;
+}
+
+#menu {
+position: absolute;
+padding: 12px;
+top: 500px;
+left: 80px;
+width: 600px;
+height: 60px;
+background-color: #F9FBB4;
+-webkit-border-radius: 8px;
+-moz-border-radius: 8px;
+border-radius: 8px;
+overflow-y: auto;
+}
+
+h1, .h1 {
+font-size: 24px;
+}
+h1, .h1, h2, .h2, h3, .h3 {
+margin: 20px;
+margin-bottom: 10px;
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+font-family: inherit;
+font-weight: 500;
+line-height: 1.1;
+color: inherit;
+}
+
+body
+{
+  background-color : #E9EBB4;
+  color: #6C8F67;
+  /*font-size: 16px;*/
+}

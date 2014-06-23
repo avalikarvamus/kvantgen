@@ -1,0 +1,23 @@
+<div id="page-nav">
+{% if pages.total %}
+{% if pages.has_prev %}<p class="page-nav"><a href="javascript:searchCompany({{pages.prev_num}});">&lt;&lt;Eelmine lk</a>{% else %}&lt;&lt; Eelmine lk{% endif %} |
+{% if pages.has_next %}<a href="javascript:searchCompany({{pages.next_num}});">Järgmine lk &gt;&gt;</a>{% else %}Järgmine lk &gt;&gt;</p>{% endif %}
+{% else %}
+Ettevõtteid pole.
+{% endif %}
+</div> 
+
+<table>
+	<tr><td>Jrnr.</td><td>Osaühing</td><td>Registri number</td><td>Osakapital</td><td>Asutamise aeg</td></tr>
+	{% for page in pages.items %}
+	<tr {% if loop.index is divisibleby 2 %}class="evenrow" {% else %} class="oddrow" {% endif %}><td>{{loop.index + (pages.page-1)*pages.per_page}}</td><td><a href="javascript:loadCompany({{page.id}});">{{page.name}}</a></td><td>{{page.regnum}}</td><td>{{page.equitycap}}</td><td>{{page.datemade}}</td></tr>
+	{% endfor %}
+</table>
+<div id="page-nav">
+{% if pages.total %}
+{% if pages.has_prev %}<p class="page-nav"><a href="javascript:searchCompany({{pages.prev_num}});">&lt;&lt;Eelmine lk</a>{% else %}&lt;&lt; Eelmine lk{% endif %} |
+{% if pages.has_next %}<a href="javascript:searchCompany({{pages.next_num}});">Järgmine lk &gt;&gt;</a>{% else %}Järgmine lk &gt;&gt;</p>{% endif %}
+{% else %}
+Ettevõtteid pole.
+{% endif %}
+</div> 

@@ -1,0 +1,18 @@
+<!-- päis ja navigaator -->
+<div id="konfig">
+	<h2>{{title}}</h2>
+	<div id="inputs">
+	<div><input id="company_name" name="nimi" type="text" placeholder="nimi - sisaldab OÜ või osaühing, 3-100 märki" required>
+	<input id="company_equitycap" name="equitycap" type="text" placeholder="vähemalt 2500 €">
+    </div><div>
+    <input id="company_regnum" name="regnum" type="text" placeholder="seitsmekohaline registrinumber">
+    <input id="company_date" name="mkdate" type="text" placeholder="asutamisaeg (täna või varem) kujul pp.kk.aaaa">
+	</div>
+    </div>
+    <div id="owners">
+	<input id="owner_number" name="ownernumber" type="text" placeholder="lisatavate osanike arv" required>
+    <a href="javascript:addOwnerRows();" class="bt">Lisa osanikke</a>
+    <div id="ownertable">
+    </div>
+	</div>
+</div>
