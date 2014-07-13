@@ -54,6 +54,15 @@ class Star(db.Model):
         self.name = name;
         self.body = Body(coordX, coordY, mass);
 
+
+    def serialize(self):
+        return {
+            self.name : {
+                'cX': str(self.body.coordX),
+                'cY': str(self.body.coordY)
+            }
+        }
+
 class Planet(db.Model):
     __tablename__    = 'planet'
     id          = db.Column(db.Integer, primary_key=True)

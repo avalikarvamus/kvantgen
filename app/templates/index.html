@@ -10,8 +10,9 @@
     {{ shp.name }}
     {{ shp.body.coordX }}
     {{ shp.body.coordY }}
-    {{ shp.faction.name }}
+    {% if shp.faction %} {{ shp.faction.name }}
     {{ shp.faction.race }}
+    {% endif %}
 {% endfor %}
 </div>
 <div id="menu">
@@ -26,4 +27,5 @@
 <div id="list">
 <noscript>Hoiatus! Lehekülg vajab toimimiseks Javascripti tuge!</noscript>
 </div>
+<script src="/static/js/kvant.js"></script>
 {% endblock %}
