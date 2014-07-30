@@ -75,6 +75,8 @@ def xml_stars():
             cx.text = str(star.body.coordX)
             cy = ET.SubElement(xstar, "cy")
             cy.text = str(star.body.coordY)
+            mass = ET.SubElement(xstar, "mass")
+            mass.text = str(star.body.mass)
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
 
@@ -92,10 +94,31 @@ def xml_star(star_id):
         cx.text = str(star.body.coordX)
         cy = ET.SubElement(xstar, "cy")
         cy.text = str(star.body.coordY)
-        mass = ET.SubElement(xstar, "cy")
+        mass = ET.SubElement(xstar, "mass")
         mass.text = str(star.body.mass)
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
+
+@app.route('/api/imperium.xml', methods=["GET", "POST"])
+def xml_imperium():
+    if 'user' in session:
+        root = ET.Element("root")
+        ships = Ship.query.all()
+        for ship in ships:
+            xship = ET.SubElement(root, "ship")
+            ident = ET.SubElement(xship, "id")
+            ident.text = str(ship.id)
+            name = ET.SubElement(xship, "name")
+            name.text = ship.name
+            cx = ET.SubElement(xship, "cx")
+            cx.text = str(ship.body.coordX)
+            cy = ET.SubElement(xship, "cy")
+            cy.text = str(ship.body.coordY)
+            mass = ET.SubElement(xship, "mass")
+            mass.text = str(ship.body.mass)
+        return ET.tostring(root, 'utf-8', method="xml")
+    return redirect(url_for('login'))
+
 
 
 app.secret_key = 'sjadiojapoqmwdm,ciowqewqjmdplkasm902348927ru9weojmc'
