@@ -23,6 +23,9 @@ def fillData():
     ship=Ship(name="Enterprise", faction=inimesed, body=Body(10, 10, 100),
                 shipclass=ShipClass(name="Independence"),
                 shipparts=[ShipPart(shippartclass=ShipPartClass(name="engine"))])
+    ship=Ship(name="dZahadum", faction=madulased, body=Body(100, 100, 100),
+                shipclass=ShipClass(name="Gorath"),
+                shipparts=[ShipPart(shippartclass=ShipPartClass(name="engine"))])
     db.session.add(ship)
     db.session.commit()
 
