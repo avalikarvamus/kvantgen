@@ -38,7 +38,7 @@ def api_ships():
     if 'user' in session:
         shipquery = Ship.query.filter(Ship.body!=None)
         ships = shipquery.all()
-        return jsonify(ships=[{'name' : ship.name} for ship in ships])
+        return jsonify(ships=[{'name' : ship.name, 'class' : ship.shipclass.name, 'faction' : ship.faction.name, 'condition' : ship.condition} for ship in ships])
     return ""
 
 

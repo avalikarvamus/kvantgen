@@ -91,6 +91,11 @@ class ShipPart(db.Model):
     shippartclass    = db.relationship('ShipPartClass', backref=db.backref('shippart', uselist=False), lazy='joined')
     maxstructure     = db.Column(db.Integer)
     curstructure     = db.Column(db.Integer)
+    
+    def __init__(self):
+		self.maxstructure = 0
+		self.curstructure = 0
+		
 
 class Ship(db.Model):
     __tablename__    = 'ship'
@@ -109,8 +114,26 @@ class Ship(db.Model):
     def maxstructure(self):
         maxstr = 0
         for part in self.shipparts:
-            maxstr = maxstr + part.maxstructure
+			if part.maxstructure is not None:
+				maxstr = maxstr + part.maxstructure
         return maxstr
+
+    @property
+    def curstructure(self):
+        curstr = 0
+        for part in self.shipparts:
+			if part.curstructure is not None:
+				curstr = curstr + part.curstructure
+        return curstr
+
+    @property
+    def condition(self):
+		curstr = self.curstructure
+		maxstr = self.maxstructure
+		if curstr > 0 and maxstr > 0:
+			return curstr / maxstr * 100
+		else :
+			return 0
 
 class Game(db.Model):
     __tablename__    = 'game'
