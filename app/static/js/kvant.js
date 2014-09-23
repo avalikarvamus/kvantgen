@@ -32,6 +32,24 @@ function loadStarXML(id) {
     });
 }
 
+function loadShipXML(id) {
+    $.ajax({
+        type: "GET",
+    url: "/api/ship"+id+".xml",
+    dataType: "xml",
+    success: function(xml) {
+        $(xml).find('star').each(function(){
+            var id = $(this).find('id').text();
+            var name = $(this).find('name').text();
+            var cx = $(this).find('cx').text();
+            var cy = $(this).find('cy').text();
+            var mass = $(this).find('mass').text();
+            $('#sidebar').html("Star: "+name+"<br>Coords: "+cx+":"+cy+"<br>Mass: "+mass);
+        });
+    }
+    });
+}
+
 function loadStarsXML() {
     $.ajax({
         type: "GET",
@@ -93,6 +111,30 @@ function loadImperiumXML() {
         });
     }
     });
+}
+
+function displayShips() {
+	//paper.hide();
+	var bot = paper.bottom, res = []; 
+	while (bot) {
+		//res.push(bot);
+		bot.hide();
+		bot = bot.next;
+	}
+	$('#sidebar').empty();
+	console.log("hidden ... suposed to be ...");
+}
+
+function displayStars() {
+	//paper.hide();
+	var bot = paper.bottom, res = []; 
+	while (bot) {
+		//res.push(bot);
+		bot.show();
+		bot = bot.next;
+	}
+	$('#sidebar').empty();
+	console.log("shown ... suposed to be ...");
 }
 
 $(document).ready(function()  {

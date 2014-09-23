@@ -33,7 +33,7 @@ def index():
     return redirect(url_for('login'))
 
 
-@app.route('/api/ships')
+@app.route('/api/ships.json')
 def api_ships():
     if 'user' in session:
         shipquery = Ship.query.filter(Ship.body!=None)
@@ -50,7 +50,7 @@ def api_ships():
 #        return jsonify(stars=[{'name' : star.name, 'x' : star.coo} for star in stars])
 #    return ""
 
-@app.route('/api/stars')
+@app.route('/api/stars.json')
 def api_stars():
     if 'user' in session:
         query = Star.query
@@ -96,6 +96,27 @@ def xml_star(star_id):
         cy.text = str(star.body.coordY)
         mass = ET.SubElement(xstar, "mass")
         mass.text = str(star.body.mass)
+        return ET.tostring(root, 'utf-8', method="xml")
+    return redirect(url_for('login'))
+
+@app.route('/api/ship<int:ship_id>.xml', methods=["GET", "POST"])
+def xml_ship(ship_id):
+    if 'user' in session:
+        root = ET.Element("root")
+        ship = Ship.query.get(ship_id)
+        xship = ET.SubElement(root, "ship")
+        ident = ET.SubElement(xship, "id")
+        ident.text = str(ship.id)
+        name = ET.SubElement(xship, "name")
+        name.text = ship.name
+        classname = ET.SubElement(xship, "classname")
+        classname.text = ship.shipclass.name
+        cx = ET.SubElement(xship, "cx")
+        cx.text = str(ship.body.coordX)
+        cy = ET.SubElement(xship, "cy")
+        cy.text = str(ship.body.coordY)
+        mass = ET.SubElement(xship, "mass")
+        mass.text = str(ship.body.mass)
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
 
