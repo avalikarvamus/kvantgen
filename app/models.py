@@ -89,12 +89,12 @@ class ShipPart(db.Model):
     id               = db.Column(db.Integer, primary_key=True)
     shippartclass_id = db.Column(db.Integer, db.ForeignKey('shippartclass.id'), nullable=False)
     shippartclass    = db.relationship('ShipPartClass', backref=db.backref('shippart', uselist=False), lazy='joined')
-    maxstructure     = db.Column(db.Integer)
-    curstructure     = db.Column(db.Integer)
+    maxstructure     = db.Column(db.Integer, default=0)
+    curstructure     = db.Column(db.Integer, default=0)
     
-    def __init__(self):
-		self.maxstructure = 0
-		self.curstructure = 0
+    #def __init__(self):
+	#	self.maxstructure = 0
+	#	self.curstructure = 0
 		
 
 class Ship(db.Model):

@@ -1,7 +1,7 @@
 var paper = Raphael(80, 80, 600, 400);
 
 function loadStars() {
-    $.getJSON("/api/stars", function (json) {
+    $.getJSON("/api/stars.json", function (json) {
         console.log(json);
         //var arr = $.parseJSON(json);
         //$.each(json.allstars, function (star) {
@@ -79,6 +79,34 @@ function loadStarsXML() {
                 loadStarXML(id);
                 console.log("klikk");
             });
+        });
+    }
+    });
+}
+
+
+function loadShipsXML() {
+    $.ajax({
+        type: "GET",
+    url: "/api/ships.xml",
+    dataType: "xml",
+    success: function(xml) {
+		var i = 1;
+        $(xml).find('ship').each(function(){
+            var id = $(this).find('id').text();
+            var name = $(this).find('name').text();
+            var cx = $(this).find('cx').text();
+            var cy = $(this).find('cy').text();
+            var mass = $(this).find('mass').text();
+            //$('<div class="items" id="link_'+id+'"></div>').html('<a href="'+url+'">'+title+'</a>').appendTo('#page-wrap');
+            console.log(name + "-" + cx + "-" + cy);
+            var circle = paper.circle(i*20, 20, 4);
+            var color = "#f77";
+            circle.attr("fill", color);
+            var silt = paper.text(i*20, 27, name).attr({fill: "#f00"}); 
+            var ellip = paper.ellipse(i*20, 25, 13, 8);
+            var popeye = paper.popup(i*230, 20, "Laev", "left", 1);
+            i++;
         });
     }
     });
