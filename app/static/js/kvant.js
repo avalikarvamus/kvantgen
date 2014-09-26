@@ -1,4 +1,9 @@
-var paper = Raphael(80, 80, 600, 400);
+var paper = null
+var aStar = null;
+
+function initPaper() {
+	paper = Raphael(80, 80, 600, 400);
+}
 
 function loadStars() {
     $.getJSON("/api/stars.json", function (json) {
@@ -74,8 +79,12 @@ function loadStarsXML() {
             if (mass < 18000) { color = "#adf" } else
             if (mass < 22000) { color = "#aff" }
             circle.attr("fill", color);
+            circle.attr("class","stars");
             circle.click(function () {
-                var silt = paper.text(cx*2.9-5, cy*1.9+7, name).attr({fill: "#f00"}); //ellipse(cx*2.9, cy*1.9, 13, 8); //popup(cx*2.9, cy*1.9, "Laev", "left", 1);
+				if (aStar!= null) {
+					aStar.remove();
+				}
+                aStar = paper.text(cx*2.9-5, cy*1.9+7, name).attr({fill: "#f00"}).node.setAttribute("class","track"); //ellipse(cx*2.9, cy*1.9, 13, 8); //popup(cx*2.9, cy*1.9, "Laev", "left", 1);
                 loadStarXML(id);
                 console.log("klikk");
             });
@@ -100,12 +109,14 @@ function loadShipsXML() {
             var mass = $(this).find('mass').text();
             //$('<div class="items" id="link_'+id+'"></div>').html('<a href="'+url+'">'+title+'</a>').appendTo('#page-wrap');
             console.log(name + "-" + cx + "-" + cy);
-            var circle = paper.circle(i*20, 20, 4);
+            var circle = paper.circle(30, i*30, 20, 4);
             var color = "#f77";
             circle.attr("fill", color);
-            var silt = paper.text(i*20, 27, name).attr({fill: "#f00"}); 
-            var ellip = paper.ellipse(i*20, 25, 13, 8);
-            var popeye = paper.popup(i*230, 20, "Laev", "left", 1);
+            var silt1 = paper.text(80, i*30, name).attr({fill: "#f00"}); 
+            var silt2 = paper.text(180, i*30, mass).attr({fill: "#f00"}); 
+            var silt3 = paper.text(240, i*30, mass).attr({fill: "#f00"}); 
+            var ellip = paper.ellipse(37, i*30, 13, 8);
+            //var popeye = paper.popup(i*230, 20, "Laev", "left", 1);
             i++;
         });
     }
@@ -134,7 +145,7 @@ function loadImperiumXML() {
             circle2.attr("fill", color);
             circle1.click(function () {
                 console.log("klikk");
-                var silt = paper.text(cx*2.9-5, cy*1.9+7, name).attr({fill: "#f00"}); //ellipse(cx*2.9, cy*1.9, 13, 8); //popup(cx*2.9, cy*1.9, "Laev", "left", 1);
+                aStar = paper.text(cx*2.9-5, cy*1.9+7, name).attr({fill: "#f00"}); //ellipse(cx*2.9, cy*1.9, 13, 8); //popup(cx*2.9, cy*1.9, "Laev", "left", 1);
             });
         });
     }
@@ -142,19 +153,24 @@ function loadImperiumXML() {
 }
 
 function displayShips() {
-	//paper.hide();
+	if (paper) paper.remove();
+	initPaper();
 	var bot = paper.bottom, res = []; 
 	while (bot) {
 		//res.push(bot);
 		bot.hide();
 		bot = bot.next;
 	}
+	loadShipsXML();
 	$('#sidebar').empty();
 	console.log("hidden ... suposed to be ...");
 }
 
 function displayStars() {
-	//paper.hide();
+	if (paper) paper.remove();
+	initPaper();
+	loadStarsXML();
+	loadImperiumXML();
 	var bot = paper.bottom, res = []; 
 	while (bot) {
 		//res.push(bot);
@@ -165,7 +181,8 @@ function displayStars() {
 	console.log("shown ... suposed to be ...");
 }
 
+
 $(document).ready(function()  {
-    loadStarsXML();
-    loadImperiumXML();
+    displayStars();
+    //loadImperiumXML();
 });
