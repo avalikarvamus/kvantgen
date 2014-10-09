@@ -8,7 +8,7 @@ from app.config import SQLALCHEMY_DATABASE_URI
 from app import db
 import os.path
 from random import randint
-from app.models import Faction, System, Star, Planet, Ship, ShipClass, ShipPart, ShipPartClass, Body
+from app.models import Faction, System, Star, Planet, Ship, ShipClass, ShipPart, ShipPartClass, Body, System
 
 def generateGalaxy():
     for i in range(1,100):
@@ -17,6 +17,8 @@ def generateGalaxy():
                 randint(10, 200),
                 randint(100, 20000))
         system = System(star)
+        for j in range(1, randint(1,5)):
+            system.planets.append(Planet("S"+str(i)+"P"+str(j)))
         db.session.add(system)
 
 

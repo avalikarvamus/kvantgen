@@ -58,7 +58,7 @@ class Star(db.Model):
     name        = db.Column(db.String(), unique=True, nullable=False)
     body_id     = db.Column(db.Integer, db.ForeignKey('body.id'), nullable=False, index=True, unique=True)
     body        = db.relationship('Body', uselist=False, backref=db.backref('star', uselist=False), lazy='joined')
-    system_id   = db.Column(db.Integer, db.ForeignKey('system.id'), nullable=False, index=True, unique=True)
+    system_id   = db.Column(db.Integer, db.ForeignKey('system.id'), nullable=False, index=True)
     system      = db.relationship('System', backref=db.backref('stars'), lazy='joined')
 
     def __init__(self, name, coordX, coordY, mass):
@@ -79,9 +79,12 @@ class Planet(db.Model):
     name        = db.Column(db.String(), unique=True, nullable=False)
     body_id     = db.Column(db.Integer, db.ForeignKey('body.id'), nullable=False, index=True, unique=True)
     body        = db.relationship('Body', uselist=False, backref=db.backref('planet', uselist=False), lazy='joined')
-    system_id   = db.Column(db.Integer, db.ForeignKey('system.id'), nullable=False, index=True, unique=True)
+    system_id   = db.Column(db.Integer, db.ForeignKey('system.id'), nullable=False, index=True)
     system      = db.relationship('System', backref=db.backref('planets'), lazy='joined')
 
+    def __init__(self, name):
+        self.name = name
+        self.body = Body(1,1,1)
 
 class System(db.Model):
     __tablename__    = 'system'
@@ -111,6 +114,9 @@ class ShipClass(db.Model):
     id          = db.Column(db.Integer, primary_key=True)
     name        = db.Column(db.String(), unique=True, nullable=False)
     ships       = db.relationship("Ship", backref=db.backref('shipclass', uselist=False),secondary="shipclass_members", lazy="dynamic")
+
+    def __init__(self, name):
+        self.name = name
 
 class ShipPartClass(db.Model):
     __tablename__    = 'shippartclass'
@@ -167,6 +173,26 @@ class Ship(db.Model):
             return curstr / maxstr * 100
         else :
             return 0
+
+class Person(db.Model):
+    __tablename__ = 'person'
+    id           = db.Column(db.Integer, primary_key=True)
+    firstname         = db.Column(db.String(), unique=True, nullable=False)
+    surename          = db.Column(db.String(), unique=True, nullable=False)
+    faction_id   = db.Column(db.Integer, db.ForeignKey('faction.id'), nullable=False)
+    faction      = db.relationship("Faction", backref="personel", lazy="joined")
+    ship_id  = db.Column(db.Integer, db.ForeignKey('ship.id'))
+    ship     = db.relationship('Ship', backref=db.backref('personel'))
+    intel    = db.Column(db.Integer, nullable=False, default=2)
+    stren    = db.Column(db.Integer, nullable=False, default=2)
+
+
+    def __init__(self):
+        super(Person, self).__init__()
+
+    @property
+    def name(self):
+        return self.firstname+" "+self.surename
 
 class Game(db.Model):
     __tablename__    = 'game'

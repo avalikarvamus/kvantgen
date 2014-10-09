@@ -6,7 +6,7 @@
 import  os, random, exceptions
 from flask import render_template, flash, redirect, session, url_for, request, jsonify, json
 from app import app, db, postreciver
-from models import Game, Ship, Faction, Body, Star
+from models import Game, Ship, Faction, Body, Star, System
 import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape
 
@@ -85,7 +85,7 @@ def xml_stars():
     return redirect(url_for('login'))
 
 @app.route('/api/systems.xml', methods=["GET", "POST"])
-def xml_stars():
+def xml_systems():
     if 'user' in session:
         root = ET.Element("root")
         systems = System.query.all()
