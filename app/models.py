@@ -26,15 +26,6 @@ shipclass_members = db.Table('shipclass_members',
                         db.ForeignKey('ship.id'))
                 )
 
-systemmembers = db.Table('systemmembers',
-                db.Column('system_id',
-                        db.Integer,
-                        db.ForeignKey('system.id')),
-                db.Column('star_id',
-                        db.Integer,
-                        db.ForeignKey('star.id'))
-                )
-
 class Faction(db.Model):
     __tablename__    = 'faction'
     id          = db.Column(db.Integer, primary_key=True)
@@ -67,11 +58,12 @@ class Star(db.Model):
     name        = db.Column(db.String(), unique=True, nullable=False)
     body_id     = db.Column(db.Integer, db.ForeignKey('body.id'), nullable=False, index=True, unique=True)
     body        = db.relationship('Body', uselist=False, backref=db.backref('star', uselist=False), lazy='joined')
+    system_id   = db.Column(db.Integer, db.ForeignKey('system.id'), nullable=False, index=True, unique=True)
+    system      = db.relationship('System', backref=db.backref('stars'), lazy='joined')
 
     def __init__(self, name, coordX, coordY, mass):
         self.name = name;
         self.body = Body(coordX, coordY, mass);
-
 
     def serialize(self):
         return {
@@ -88,28 +80,26 @@ class Planet(db.Model):
     body_id     = db.Column(db.Integer, db.ForeignKey('body.id'), nullable=False, index=True, unique=True)
     body        = db.relationship('Body', uselist=False, backref=db.backref('planet', uselist=False), lazy='joined')
     system_id   = db.Column(db.Integer, db.ForeignKey('system.id'), nullable=False, index=True, unique=True)
-    system      = db.relationship('System', backref=db.backref('system'), lazy='joined')
+    system      = db.relationship('System', backref=db.backref('planets'), lazy='joined')
 
 
 class System(db.Model):
     __tablename__    = 'system'
     id          = db.Column(db.Integer, primary_key=True)
     name        = db.Column(db.String(), unique=True, nullable=False)
-    stars       = db.relationship("Star", backref="system", secondary="systemmembers", lazy="dynamic")
-    planets     = db.relationship("Planet", backref="systems", lazy="dynamic")
+    #stars       = db.relationship("Star", backref="system", lazy="dynamic")
+    #planets     = db.relationship("Planet", backref="systems", lazy="dynamic")
 
     def getStars():
         ret = []
-        for body in members:
-            if body.star:
-                ret.append(body.star)
+        for star in stars:
+            ret.append(star)
         return ret
 
     def getPlanets():
         ret = []
-        for body in members:
-            if body.planet:
-                ret.append(body.planet)
+        for planet in planets:
+            ret.append(planet)
         return ret
 
     def __init__(self, star):
@@ -120,7 +110,7 @@ class ShipClass(db.Model):
     __tablename__    = 'shipclass'
     id          = db.Column(db.Integer, primary_key=True)
     name        = db.Column(db.String(), unique=True, nullable=False)
-    ships       = db.relationship("Ship", backref="shipclass_members", lazy="dynamic")
+    ships       = db.relationship("Ship", backref=db.backref('shipclass', uselist=False),secondary="shipclass_members", lazy="dynamic")
 
 class ShipPartClass(db.Model):
     __tablename__    = 'shippartclass'
@@ -148,10 +138,10 @@ class Ship(db.Model):
     faction      = db.relationship("Faction", backref="ships", lazy="joined")
     body_id      = db.Column(db.Integer, db.ForeignKey('body.id'), nullable=False, index=True, unique=True)
     body         = db.relationship('Body', uselist=False, backref=db.backref('ship', uselist=False), lazy='joined')
-    shipclass_id = db.Column(db.Integer, db.ForeignKey('shipclass.id'), nullable=False, index=True, unique=True)
-    shipclass    = db.relationship('ShipClass', backref=db.backref('ship', uselist=False), lazy='joined')
+    #shipclass_id = db.Column(db.Integer, db.ForeignKey('shipclass.id'), nullable=False, index=True, unique=True)
+    #shipclass    = db.relationship('ShipClass')
     #ship parts#
-    shipparts    = db.relationship("ShipPart", backref="ship", secondary="shippartowners", lazy="dynamic")
+    shipparts    = db.relationship("ShipPart", backref=db.backref("ship"), secondary="shippartowners", lazy="dynamic")
 
     @property
     def maxstructure(self):

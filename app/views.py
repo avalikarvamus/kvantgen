@@ -84,6 +84,33 @@ def xml_stars():
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
 
+@app.route('/api/systems.xml', methods=["GET", "POST"])
+def xml_stars():
+    if 'user' in session:
+        root = ET.Element("root")
+        systems = System.query.all()
+        for system in systems:
+            xsystem = ET.SubElement(root, "system")
+            for star in system.stars:
+                xstar = ET.SubElement(xsystem, "star")
+                ident = ET.SubElement(xstar, "id")
+                ident.text = str(star.id)
+                name = ET.SubElement(xstar, "name")
+                name.text = star.name
+                cx = ET.SubElement(xstar, "cx")
+                cx.text = str(star.body.coordX)
+                cy = ET.SubElement(xstar, "cy")
+                cy.text = str(star.body.coordY)
+                mass = ET.SubElement(xstar, "mass")
+                mass.text = str(star.body.mass)
+            for planets in system.planets:
+                xplanet = ET.SubElement(xsystem, "planet")
+                ident = ET.SubElement(xplanet, "id")
+                name = ET.SubElement(xplanet, "name")
+        return ET.tostring(root, 'utf-8', method="xml")
+    return redirect(url_for('login'))
+
+
 @app.route('/api/ships.xml', methods=["GET", "POST"])
 def xml_ships():
     if 'user' in session:
