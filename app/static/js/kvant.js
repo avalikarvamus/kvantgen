@@ -2,6 +2,7 @@ var paper = null
 var aStar = null;
 
 function initPaper() {
+	if (paper) paper.remove();
 	paper = Raphael(80, 80, 600, 400);
 }
 
@@ -112,9 +113,9 @@ function loadShipsXML() {
             var circle = paper.circle(30, i*30, 20, 4);
             var color = "#f77";
             circle.attr("fill", color);
-            var silt1 = paper.text(80, i*30, name).attr({fill: "#f00"}); 
-            var silt2 = paper.text(180, i*30, mass).attr({fill: "#f00"}); 
-            var silt3 = paper.text(240, i*30, mass).attr({fill: "#f00"}); 
+            var silt1 = paper.text(80, i*30, name).attr({fill: "#f00"});
+            var silt2 = paper.text(180, i*30, mass).attr({fill: "#f00"});
+            var silt3 = paper.text(240, i*30, mass).attr({fill: "#f00"});
             var ellip = paper.ellipse(37, i*30, 13, 8);
             //var popeye = paper.popup(i*230, 20, "Laev", "left", 1);
             i++;
@@ -153,9 +154,8 @@ function loadImperiumXML() {
 }
 
 function displayShips() {
-	if (paper) paper.remove();
 	initPaper();
-	var bot = paper.bottom, res = []; 
+	var bot = paper.bottom, res = [];
 	while (bot) {
 		//res.push(bot);
 		bot.hide();
@@ -167,11 +167,10 @@ function displayShips() {
 }
 
 function displayStars() {
-	if (paper) paper.remove();
 	initPaper();
 	loadStarsXML();
 	loadImperiumXML();
-	var bot = paper.bottom, res = []; 
+	var bot = paper.bottom, res = [];
 	while (bot) {
 		//res.push(bot);
 		bot.show();
@@ -181,6 +180,19 @@ function displayStars() {
 	console.log("shown ... suposed to be ...");
 }
 
+function displayPlanets() {
+	initPaper();
+	loadStarsXML();
+	loadImperiumXML();
+	var bot = paper.bottom, res = [];
+	while (bot) {
+		//res.push(bot);
+		bot.show();
+		bot = bot.next;
+	}
+	$('#sidebar').empty();
+	console.log("shown ... suposed to be ...");
+}
 
 $(document).ready(function()  {
     displayStars();

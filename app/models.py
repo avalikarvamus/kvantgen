@@ -9,13 +9,31 @@ from datetime import datetime
 from sqlalchemy.orm import relationship, backref
 
 shippartowners = db.Table('shippartowners',
-                                    db.Column('ship.id', db.Integer,
-                                              db.ForeignKey('ship.id')),
-                                    db.Column(
-                                        'shippart.id',
-                                        db.Integer,
-                                        db.ForeignKey('shippart.id'))
-                                    )
+                db.Column('ship_id',
+                        db.Integer,
+                        db.ForeignKey('ship.id')),
+                db.Column('shippart_id',
+                        db.Integer,
+                        db.ForeignKey('shippart.id'))
+                )
+
+shipclass_members = db.Table('shipclass_members',
+                db.Column('shipclass_id',
+                        db.Integer,
+                        db.ForeignKey('shipclass.id')),
+                db.Column('ship_id',
+                        db.Integer,
+                        db.ForeignKey('ship.id'))
+                )
+
+systemmembers = db.Table('systemmembers',
+                db.Column('system_id',
+                        db.Integer,
+                        db.ForeignKey('system.id')),
+                db.Column('star_id',
+                        db.Integer,
+                        db.ForeignKey('star.id'))
+                )
 
 class Faction(db.Model):
     __tablename__    = 'faction'
@@ -69,15 +87,40 @@ class Planet(db.Model):
     name        = db.Column(db.String(), unique=True, nullable=False)
     body_id     = db.Column(db.Integer, db.ForeignKey('body.id'), nullable=False, index=True, unique=True)
     body        = db.relationship('Body', uselist=False, backref=db.backref('planet', uselist=False), lazy='joined')
-    star_id     = db.Column(db.Integer, db.ForeignKey('star.id'), nullable=False, index=True, unique=True)
-    star        = db.relationship('Star', backref=db.backref('star'), lazy='joined')
+    system_id   = db.Column(db.Integer, db.ForeignKey('system.id'), nullable=False, index=True, unique=True)
+    system      = db.relationship('System', backref=db.backref('system'), lazy='joined')
 
+
+class System(db.Model):
+    __tablename__    = 'system'
+    id          = db.Column(db.Integer, primary_key=True)
+    name        = db.Column(db.String(), unique=True, nullable=False)
+    stars       = db.relationship("Star", backref="system", secondary="systemmembers", lazy="dynamic")
+    planets     = db.relationship("Planet", backref="systems", lazy="dynamic")
+
+    def getStars():
+        ret = []
+        for body in members:
+            if body.star:
+                ret.append(body.star)
+        return ret
+
+    def getPlanets():
+        ret = []
+        for body in members:
+            if body.planet:
+                ret.append(body.planet)
+        return ret
+
+    def __init__(self, star):
+        self.name = star.name
+        self.stars.append(star)
 
 class ShipClass(db.Model):
     __tablename__    = 'shipclass'
     id          = db.Column(db.Integer, primary_key=True)
     name        = db.Column(db.String(), unique=True, nullable=False)
-    #ships       = db.relationship("Ship", backref="shipclass", lazy="dynamic")
+    ships       = db.relationship("Ship", backref="shipclass_members", lazy="dynamic")
 
 class ShipPartClass(db.Model):
     __tablename__    = 'shippartclass'
@@ -91,11 +134,11 @@ class ShipPart(db.Model):
     shippartclass    = db.relationship('ShipPartClass', backref=db.backref('shippart', uselist=False), lazy='joined')
     maxstructure     = db.Column(db.Integer, default=0)
     curstructure     = db.Column(db.Integer, default=0)
-    
+
     #def __init__(self):
-	#	self.maxstructure = 0
-	#	self.curstructure = 0
-		
+    #    self.maxstructure = 0
+    #    self.curstructure = 0
+
 
 class Ship(db.Model):
     __tablename__    = 'ship'
@@ -114,26 +157,26 @@ class Ship(db.Model):
     def maxstructure(self):
         maxstr = 0
         for part in self.shipparts:
-			if part.maxstructure is not None:
-				maxstr = maxstr + part.maxstructure
+            if part.maxstructure is not None:
+                maxstr = maxstr + part.maxstructure
         return maxstr
 
     @property
     def curstructure(self):
         curstr = 0
         for part in self.shipparts:
-			if part.curstructure is not None:
-				curstr = curstr + part.curstructure
+            if part.curstructure is not None:
+                curstr = curstr + part.curstructure
         return curstr
 
     @property
     def condition(self):
-		curstr = self.curstructure
-		maxstr = self.maxstructure
-		if curstr > 0 and maxstr > 0:
-			return curstr / maxstr * 100
-		else :
-			return 0
+        curstr = self.curstructure
+        maxstr = self.maxstructure
+        if curstr > 0 and maxstr > 0:
+            return curstr / maxstr * 100
+        else :
+            return 0
 
 class Game(db.Model):
     __tablename__    = 'game'
