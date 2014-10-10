@@ -129,6 +129,9 @@ function loadMapXML() {
 				loadStarXML(id);
 				console.log("klikk");
 			});
+			$(this).find('planet').each(function(){
+				paper.circle(cx*2.9, cy*1.9+4, 3);
+			});
 		});
 	}
 	});
