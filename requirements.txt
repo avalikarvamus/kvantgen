@@ -6,6 +6,7 @@ Flask-Script
 Flask-Social
 Flask-Uploads
 Flask-Wtf
+Flask-SQLAlchemy
 Jinja2
 SQLAlchemy
 Werkzeug

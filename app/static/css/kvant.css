@@ -22,8 +22,8 @@ border-radius: 8px;
 position: absolute;
 top: 80px;
 left: 80px;
-width: 600px;
-height: 400px;
+width: 900px;
+height: 600px;
 background-color: #070707;
 -webkit-border-radius: 8px;
 -moz-border-radius: 8px;
@@ -33,7 +33,7 @@ border-radius: 8px;
 #sidebar {
 position: absolute;
 top: 80px;
-left: 690px;
+left: 990px;
 width: 200px;
 height: 480px;
 background-color: #F9FBB4;
@@ -45,7 +45,7 @@ border-radius: 8px;
 #menu {
 position: absolute;
 padding: 12px;
-top: 500px;
+top: 700px;
 left: 80px;
 width: 600px;
 height: 60px;
