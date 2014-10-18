@@ -50,7 +50,11 @@ function loadShipXML(id) {
 			var cx = $(this).find('cx').text();
 			var cy = $(this).find('cy').text();
 			var mass = $(this).find('mass').text();
-			$('#sidebar').html("Star: "+name+"<br>Coords: "+cx+":"+cy+"<br>Mass: "+mass);
+			var planets = "<br>";
+			$(xml).find('planet').each(function(){
+				planets = planets + "<br>" + $(this).find('name').text();
+			});
+			$('#sidebar').html("Star: "+name+"<br>Coords: "+cx+":"+cy+"<br>Mass: "+mass+"<br>"+planets);
 		});
 	}
 	});
