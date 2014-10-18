@@ -149,6 +149,12 @@ def xml_star(star_id):
         cy.text = str(star.body.coordY)
         mass = ET.SubElement(xstar, "mass")
         mass.text = str(star.body.mass)
+        for planet in star.system.planets:
+                xplanet = ET.SubElement(xstar, "planet")
+                plident = ET.SubElement(xplanet, "id")
+                plident.text = str(planet.id)
+                plname = ET.SubElement(xplanet, "name")
+                plname.text = str(planet.name)
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
 
