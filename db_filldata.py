@@ -12,13 +12,15 @@ from app.models import Faction, System, Star, Planet, Ship, ShipClass, ShipPart,
 
 def generateGalaxy():
     for i in range(1,100):
+
+    for i in range(1,100):
         star =  Star('Name '+str(i),
                 randint(10, 200),
                 randint(10, 200),
                 randint(100, 20000))
         system = System(star)
         for j in range(1, randint(1,5)):
-            system.planets.append(Planet("S"+str(i)+"P"+str(j)))
+            system.planets.append(Planet("S"+str(i)+"P"+str(j), star.body.coordx, star.body.coordy))
         db.session.add(system)
 
 

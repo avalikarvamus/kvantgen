@@ -134,8 +134,8 @@ function loadMapXML() {
 				var a, b = 0;
 				if (i == 1) { a = -7; b = -7;}
 				if (i == 2) { a = 7; b = -7;}
-				if (i == 3) { a = -7; b = 7;}
-				if (i == 4) { a = 7; b = 7;}
+				if (i == 3) { a = -7; b = 4;}
+				if (i == 4) { a = 7; b = 4;}
 				if (i == 5) { a = -9;}
 				var planet = paper.circle(cx*4.2+a, cy*2.9+b, 3);
 				planet.attr("fill", "#552299");

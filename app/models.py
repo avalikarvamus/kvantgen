@@ -86,6 +86,10 @@ class Planet(db.Model):
         self.name = name
         self.body = Body(1,1,1)
 
+    def __init__(self, name, cx, cy):
+        self.name = name
+        self.body = Body(cx,cy,1)
+
 class System(db.Model):
     __tablename__    = 'system'
     id          = db.Column(db.Integer, primary_key=True)
