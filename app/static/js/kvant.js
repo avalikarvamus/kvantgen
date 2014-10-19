@@ -26,14 +26,24 @@ function loadStarXML(id) {
 	url: "/api/star"+id+".xml",
 	dataType: "xml",
 	success: function(xml) {
+		$('#sidebar').html("");
 		$(xml).find('star').each(function(){
 			var id = $(this).find('id').text();
 			var name = $(this).find('name').text();
 			var cx = $(this).find('cx').text();
 			var cy = $(this).find('cy').text();
 			var mass = $(this).find('mass').text();
-			$('#sidebar').html("Star: "+name+"<br>Coords: "+cx+":"+cy+"<br>Mass: "+mass);
+			$('#sidebar').append("<br>Star: "+name+"<br>Coords: "+cx+":"+cy+"<br>Mass: "+mass);
 		});
+		$(xml).find('planets').find('planet').each(function(){
+			var id = $(this).find('id').text();
+			var name = $(this).find('name').text();
+			var cx = $(this).find('cx').text();
+			var cy = $(this).find('cy').text();
+			var mass = $(this).find('mass').text();
+			$('#sidebar').append("<br>Planet: "+name+"<br>Coords: "+cx+":"+cy+"<br>Mass: "+mass);
+		});
+
 	}
 	});
 }

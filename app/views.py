@@ -4,20 +4,23 @@
 #
 
 import  os, random, exceptions
-from flask import render_template, flash, redirect, session, url_for, request, jsonify, json
+from flask import (render_template, flash, redirect,
+                session, url_for, request, jsonify, json)
 from app import app, db, postreciver
 from models import Game, Ship, Faction, Body, Star, System
 import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape
 
+
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        if request.form.has_key('kasutaja') and request.form.has_key('salakala'):
+        if ('kasutaja' in request.form and
+                    'salakala' in request.form):
             clMachine = request.form['kasutaja']
             clSecret = request.form['salakala']
-            if clMachine=="test" and clSecret=="toomas":
-                session['user']=clMachine
+            if clMachine == "test" and clSecret == "toomas":
+                session['user'] = clMachine
                 return redirect(url_for('index'))
     return render_template('loginform.html')
 
@@ -29,7 +32,8 @@ def logout():
 @app.route('/')
 def index():
     if 'user' in session:
-        return render_template("index.html", title = 'Kvantgeneraatori plahvatus')
+        return render_template("index.html",
+                title = 'Kvantgeneraatori plahvatus')
     return redirect(url_for('login'))
 
 
@@ -38,10 +42,10 @@ def api_ships():
     if 'user' in session:
         shipquery = Ship.query.filter(Ship.body!=None)
         ships = shipquery.all()
-        return jsonify(ships=[{'name' : ship.name,
-                'class' : ship.shipclass.name,
-                'faction' : ship.faction.name,
-                'condition' : ship.condition}
+        return jsonify(ships=[{'name': ship.name,
+                'class': ship.shipclass.name,
+                'faction': ship.faction.name,
+                'condition': ship.condition}
                 for ship in ships])
     return ""
 
@@ -61,7 +65,9 @@ def api_stars():
         stars = query.all()
         #for item in stars:
         #    data.add("name":item.name)
-        return jsonify(allstars=[{'name' : star.name, 'cx' : star.body.coordX, 'cy' : star.body.coordY} for star in stars])
+        return jsonify(allstars=[{'name' : star.name,
+                                  'cx' : star.body.coordX,
+                                  'cy' : star.body.coordY} for star in stars])
     return redirect(url_for('login'))
 
 @app.route('/api/stars.xml', methods=["GET", "POST"])
@@ -83,6 +89,7 @@ def xml_stars():
             mass.text = str(star.body.mass)
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
+
 
 @app.route('/api/systems.xml', methods=["GET", "POST"])
 def xml_systems():
@@ -133,6 +140,7 @@ def xml_ships():
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
 
+
 @app.route('/api/star<int:star_id>.xml', methods=["GET", "POST"])
 def xml_star(star_id):
     if 'user' in session:
@@ -149,14 +157,16 @@ def xml_star(star_id):
         cy.text = str(star.body.coordY)
         mass = ET.SubElement(xstar, "mass")
         mass.text = str(star.body.mass)
+        planets = ET.SubElement(root, "planets")
         for planet in star.system.planets:
-                xplanet = ET.SubElement(xstar, "planet")
+                xplanet = ET.SubElement(planets, "planet")
                 plident = ET.SubElement(xplanet, "id")
                 plident.text = str(planet.id)
                 plname = ET.SubElement(xplanet, "name")
                 plname.text = str(planet.name)
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
+
 
 @app.route('/api/ship<int:ship_id>.xml', methods=["GET", "POST"])
 def xml_ship(ship_id):
@@ -179,6 +189,7 @@ def xml_ship(ship_id):
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
 
+
 @app.route('/api/imperium.xml', methods=["GET", "POST"])
 def xml_imperium():
     if 'user' in session:
@@ -198,7 +209,6 @@ def xml_imperium():
             mass.text = str(ship.body.mass)
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
-
 
 
 app.secret_key = 'sjadiojapoqmwdm,ciowqewqjmdplkasm902348927ru9weojmc'
