@@ -164,6 +164,8 @@ def xml_star(star_id):
                 plident.text = str(planet.id)
                 plname = ET.SubElement(xplanet, "name")
                 plname.text = str(planet.name)
+                platm = ET.SubElement(xplanet, "atmo")
+                platm.text = str(planet.atmosphere)
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
 

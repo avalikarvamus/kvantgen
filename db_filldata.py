@@ -13,7 +13,9 @@ from app.models import (Faction, System, Star, Planet, Ship, ShipClass,
 
 def generateGalaxy():
 #    for i in range(1,100):
-    oxygen = Atmosphere("oxygen", 23.4)
+    atms = []
+    atms.append(Atmosphere("oxygen", 23.4))
+    atms.append(None)
     for i in range(1,100):
         star =  Star('Name '+str(i),
                 randint(10, 200),
@@ -21,14 +23,17 @@ def generateGalaxy():
                 randint(100, 20000))
         system = System(star)
         for j in range(1, randint(1,5)):
-            system.planets.append(Planet("S"+str(i)+"P"+str(j), star.body.coordX, star.body.coordY))
+            planet = Planet("S"+str(i)+"P"+str(j), star.body.coordX, star.body.coordY)
+            planet.atmosphere = atms[1]
+            system.planets.append(planet)
         db.session.add(system)
 
 
 def fillData():
     generateGalaxy()
-    madulased=Faction(name="shshhh",race=u"madulased")
-    inimesed=Faction(name="inimesed",race=u"humanoidid")
+    neutral = Faction(name="",race=u"")
+    madulased = Faction(name="shshhh",race=u"madulased")
+    inimesed = Faction(name="inimesed",race=u"humanoidid")
     db.session.add(madulased)
     engine=ShipPartClass(name="engine")
     ship=Ship(name="Enterprise", faction=inimesed, body=Body(10, 10, 100),

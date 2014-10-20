@@ -97,10 +97,38 @@ class Atmosphere(db.Model):
         self.density = density
 
 
+class BuildingClass(db.Model):
+    __tablename__    = 'buildingclass'
+    id          = db.Column(db.Integer, primary_key=True)
+    name        = db.Column(db.String())
+
+    def __init__(self):
+        super(BuildingClass, self).__init__()
+
+
+class Building(db.Model):
+    __tablename__    = 'building'
+    id          = db.Column(db.Integer, primary_key=True)
+    colony_id     = db.Column(db.Integer, db.ForeignKey('colony.id'),
+                        nullable=False, index=True, unique=True)
+    colony        = db.relationship('Colony', uselist=False,
+                        backref=db.backref('buildings'),
+                        lazy='joined')
+
+    def __init__(self):
+        super(Building, self).__init__()
+
+
 class Colony(db.Model):
     __tablename__    = 'colony'
     id          = db.Column(db.Integer, primary_key=True)
     population  = db.Column(db.Float)
+
+    faction_id  = db.Column(db.Integer, db.ForeignKey('faction.id'),
+                        nullable=False)
+    faction     = db.relationship("Faction",
+                        backref="colonies",
+                        lazy="joined")
 
 
 class Planet(db.Model):
@@ -135,12 +163,13 @@ class Planet(db.Model):
         self.name = name
         self.body = Body(cx,cy,1)
 
+
 class System(db.Model):
     __tablename__    = 'system'
     id          = db.Column(db.Integer, primary_key=True)
     name        = db.Column(db.String(), unique=True, nullable=False)
-    #stars       = db.relationship("Star", backref="system", lazy="dynamic")
-    #planets     = db.relationship("Planet", backref="systems", lazy="dynamic")
+#    stars       = db.relationship("Star", backref="system", lazy="dynamic")
+#    planets     = db.relationship("Planet", backref="systems", lazy="dynamic")
 
     def getStars():
         ret = []
