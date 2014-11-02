@@ -159,9 +159,9 @@ class Planet(db.Model):
         self.name = name
         self.body = Body(1,1,1)
 
-    def __init__(self, name, cx, cy):
+    def __init__(self, name, cx, cy, mass):
         self.name = name
-        self.body = Body(cx,cy,1)
+        self.body = Body(cx,cy,mass)
 
 
 class System(db.Model):

@@ -124,7 +124,7 @@ function loadMapXML() {
 			var mass = $(star).find('mass').text();
 			//$('<div class="items" id="link_'+id+'"></div>').html('<a href="'+url+'">'+title+'</a>').appendTo('#page-wrap');
 			console.log(name + "-" + cx + "-" + cy);
-			var circle = paper.circle(cx*4.2, cy*2.9, 6);
+			var circle = paper.circle(10+cx*4.2*2, 10+cy*2.9*2, 6);
 			var color = "#f77";
 			if (mass < 2000) { color = "#f88" } else
 			if (mass < 4000) { color = "#f99" } else
@@ -139,20 +139,31 @@ function loadMapXML() {
 				if (aStar!= null) {
 					aStar.remove();
 				}
-				aStar = paper.text(cx*4.2-5, cy*2.9+7, name).attr({fill: "#f00"}).node.setAttribute("class","track"); //ellipse(cx*2.9, cy*1.9, 13, 8); //popup(cx*2.9, cy*1.9, "Laev", "left", 1);
+				aStar = paper.text(10+cx*8.4-5, 10+cy*5.8+7, name).attr({fill: "#f00"}).node.setAttribute("class","track"); //ellipse(cx*2.9, cy*1.9, 13, 8); //popup(cx*2.9, cy*1.9, "Laev", "left", 1);
 				loadStarXML(id);
 				console.log("klikk");
 			});
 			i = 1;
 			$(this).find('planet').each(function(){
+				//var planet = $(this).find('planet');
 				var a, b = 0;
 				if (i == 1) { a = -7; b = -7;}
 				if (i == 2) { a = 7; b = -7;}
 				if (i == 3) { a = -7; b = 4;}
 				if (i == 4) { a = 7; b = 4;}
 				if (i == 5) { a = -9;}
-				var planet = paper.circle(cx*4.2+a, cy*2.9+b, 3);
-				planet.attr("fill", "#552299");
+				var pmass = $(this).find('mass').text();
+				var planet = paper.circle(10+cx*8.4+a, 10+cy*5.8+b, 3);
+				var pcolor = "#777";
+				if (pmass < 11) { pcolor = "#388" } else
+				if (pmass < 12) { pcolor = "#399" } else
+				if (pmass < 14) { pcolor = "#3bb" } else
+				if (pmass < 15) { pcolor = "#3cc" } else
+				if (pmass < 16) { pcolor = "#3dd" } else
+				if (pmass < 18) { pcolor = "#3df" } else
+				if (pmass < 20) { pcolor = "#3ff" }
+				console.log(pmass);
+				planet.attr("fill", pcolor);
 				i++;
 			});
 		});
@@ -204,14 +215,14 @@ function loadImperiumXML() {
 			//$('<div class="items" id="link_'+id+'"></div>').html('<a href="'+url+'">'+title+'</a>').appendTo('#page-wrap');
 			console.log(name + "-" + cx + "-" + cy);
 			dashed = {fill: "none", stroke: "#666", "stroke-dasharray": "- "};
-			var circle1 = paper.ellipse(cx*2.9, cy*1.9, 5, 3);
-			var circle2 = paper.path("M10"+cx*2.9 + " " + cy*1.9 +" "+ 4).attr(dashed); //circle(cx*2.9, cy*1.9, 4);
+			var circle1 = paper.ellipse(10+cx*8.4, 10+cy*5.8, 5, 3);
+			var circle2 = paper.path("M10"+10+cx*8.4 + " " + 10+cy*5.8 +" "+ 4).attr(dashed); //circle(cx*2.9, cy*1.9, 4);
 			var color = "#779";
 			circle1.attr("fill", color);
 			circle2.attr("fill", color);
 			circle1.click(function () {
 				console.log("klikk");
-				aStar = paper.text(cx*2.9-5, cy*1.9+7, name).attr({fill: "#f00"}); //ellipse(cx*2.9, cy*1.9, 13, 8); //popup(cx*2.9, cy*1.9, "Laev", "left", 1);
+				aStar = paper.text(10+cx*8.4-5, 10+cy*5.8+7, name).attr({fill: "#f00"}); //ellipse(cx*2.9, cy*1.9, 13, 8); //popup(cx*2.9, cy*1.9, "Laev", "left", 1);
 			});
 		});
 	}
@@ -247,7 +258,7 @@ function displayStars() {
 
 function displayPlanets() {
 	initPaper();
-	loadStarsXML();
+	loadMapXML();
 	loadImperiumXML();
 	var bot = paper.bottom, res = [];
 	while (bot) {

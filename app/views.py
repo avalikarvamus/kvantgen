@@ -116,6 +116,8 @@ def xml_systems():
                 plident.text = str(planet.id)
                 plname = ET.SubElement(xplanet, "name")
                 plname.text = str(planet.name)
+                mass = ET.SubElement(xplanet, "mass")
+                mass.text = str(planet.body.mass)
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
 
@@ -166,6 +168,12 @@ def xml_star(star_id):
                 plname.text = str(planet.name)
                 platm = ET.SubElement(xplanet, "atmo")
                 platm.text = str(planet.atmosphere)
+                cx = ET.SubElement(xplanet, "cx")
+                cx.text = str(planet.body.coordX)
+                cy = ET.SubElement(xplanet, "cy")
+                cy.text = str(planet.body.coordY)
+                platm = ET.SubElement(xplanet, "mass")
+                platm.text = str(planet.body.mass)
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
 
