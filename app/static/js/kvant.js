@@ -147,21 +147,22 @@ function loadMapXML() {
 			$(this).find('planet').each(function(){
 				//var planet = $(this).find('planet');
 				var a, b = 0;
-				if (i == 1) { a = -7; b = -7;}
-				if (i == 2) { a = 7; b = -7;}
-				if (i == 3) { a = -7; b = 4;}
+				if (i == 1) { a = -7; b = -2;}
+				if (i == 2) { a = 3; b = -2;}
+				if (i == 3) { a = -3; b = 4;}
 				if (i == 4) { a = 7; b = 4;}
 				if (i == 5) { a = -9;}
 				var pmass = $(this).find('mass').text();
-				var planet = paper.circle(10+cx*8.4+a, 10+cy*5.8+b, 3);
 				var pcolor = "#777";
-				if (pmass < 11) { pcolor = "#388" } else
-				if (pmass < 12) { pcolor = "#399" } else
-				if (pmass < 14) { pcolor = "#3bb" } else
-				if (pmass < 15) { pcolor = "#3cc" } else
-				if (pmass < 16) { pcolor = "#3dd" } else
-				if (pmass < 18) { pcolor = "#3df" } else
-				if (pmass < 20) { pcolor = "#3ff" }
+				var diag = 3;
+				if (pmass < 11) { pcolor = "#388"; diag = 1 } else
+				if (pmass < 12) { pcolor = "#399"; diag = 1 } else
+				if (pmass < 14) { pcolor = "#3bb"; diag = 2 } else
+				if (pmass < 15) { pcolor = "#3cc"; diag = 2 } else
+				if (pmass < 16) { pcolor = "#3dd"; diag = 3 } else
+				if (pmass < 18) { pcolor = "#3df"; diag = 3 } else
+				if (pmass < 20) { pcolor = "#3ff"; diag = 4 }
+				var planet = paper.circle(10+cx*8.4+a, 10+cy*5.8+b, diag);
 				console.log(pmass);
 				planet.attr("fill", pcolor);
 				i++;

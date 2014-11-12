@@ -171,17 +171,17 @@ class System(db.Model):
 #    stars       = db.relationship("Star", backref="system", lazy="dynamic")
 #    planets     = db.relationship("Planet", backref="systems", lazy="dynamic")
 
-    def getStars():
-        ret = []
-        for star in stars:
-            ret.append(star)
-        return ret
+    #def getStars():
+        #ret = []
+        #for star in stars:
+            #ret.append(star)
+        #return ret
 
-    def getPlanets():
-        ret = []
-        for planet in self.planets:
-            ret.append(planet)
-        return ret
+    #def getPlanets():
+        #ret = []
+        #for planet in self.planets:
+            #ret.append(planet)
+        #return ret
 
     def __init__(self, star):
         self.name = star.name
