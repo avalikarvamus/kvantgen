@@ -1,0 +1,2 @@
+. pypy/bin/activate ;
+pypy main.py
