@@ -1,0 +1,4 @@
+app/*.pyc
+app/*.db
+pypy*
+venv*
