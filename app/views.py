@@ -7,7 +7,7 @@ import  os, random, exceptions
 from flask import (render_template, flash, redirect,
                 session, url_for, request, jsonify, json)
 from app import app, db, postreciver
-from models import Game, Ship, Faction, Body, Star, System
+from models import Game, Ship, Faction, Body, Star, System, Person
 import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape
 
@@ -68,6 +68,18 @@ def api_stars():
         return jsonify(allstars=[{'name' : star.name,
                                   'cx' : star.body.coordX,
                                   'cy' : star.body.coordY} for star in stars])
+    return redirect(url_for('login'))
+
+@app.route('/api/persons.json')
+def api_persons():
+    if 'user' in session:
+        query = Person.query
+        persons = query.all()
+        #for item in stars:
+        #    data.add("name":item.name)
+        return jsonify(persons=[{'firstname' : person.firstname,
+                                  'surename' : person.surename,
+                                  'stren' : person.stren} for person in persons])
     return redirect(url_for('login'))
 
 @app.route('/api/stars.xml', methods=["GET", "POST"])
@@ -196,6 +208,10 @@ def xml_ship(ship_id):
         cy.text = str(ship.body.coordY)
         mass = ET.SubElement(xship, "mass")
         mass.text = str(ship.body.mass)
+        crew = ET.SubElement(xship, "crew")
+        for person in ship.personel:
+            member = ET.SubElement(crew, "person")
+            member.text = str(person.firstname)
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#    
+#
 #    Copyright 2013 Madis Veskimeister <madis@pingviinitiivul.ee>
 #
 
@@ -12,5 +12,6 @@ app.config.from_pyfile('config.py')
 app.config['DEBUG'] = True
 db = SQLAlchemy(app)
 
-from app import views
+from app import views, ajax
 
+##app.register_blueprint(ajax, url_prefix='/ajax')

@@ -4,7 +4,7 @@
 #
 
 from flask import Flask
-from app import app, db
+from app import db
 from datetime import datetime
 from sqlalchemy.orm import relationship, backref
 
@@ -282,8 +282,13 @@ class Person(db.Model):
                         lazy="joined")
     ship_id  = db.Column(db.Integer, db.ForeignKey('ship.id'))
     ship     = db.relationship('Ship', backref=db.backref('personel'))
-    intel    = db.Column(db.Integer, nullable=False, default=2)
     stren    = db.Column(db.Integer, nullable=False, default=2)
+    percep   = db.Column(db.Integer, nullable=False, default=2)
+    endura   = db.Column(db.Integer, nullable=False, default=2)
+    carisma  = db.Column(db.Integer, nullable=False, default=2)
+    intel    = db.Column(db.Integer, nullable=False, default=2)
+    luck     = db.Column(db.Integer, nullable=False, default=2)
+
 
     def __init__(self):
         super(Person, self).__init__()

@@ -9,7 +9,7 @@ from app import db
 import os.path
 from random import randint
 from app.models import (Faction, System, Star, Planet, Ship, ShipClass,
-                        ShipPart, ShipPartClass, Body, Atmosphere)
+                        ShipPart, ShipPartClass, Body, Person, Atmosphere)
 
 
 def generateGalaxy():
@@ -46,6 +46,12 @@ def fillData():
                 shipclass=indep,
                 shipparts=[ShipPart(shippartclass=engine)])
     db.session.add(ship)
+    kirk = Person()
+    kirk.firstname="James T."
+    kirk.surename="Kirk"
+    kirk.faction=inimesed
+    kirk.ship=ship
+    db.session.add(kirk)
     ship1 = Ship(name="Illustrious", faction=inimesed, body=Body(10, 40, 100),
                 shipclass=indep,
                 shipparts=[ShipPart(shippartclass=engine)])
