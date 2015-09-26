@@ -230,6 +230,32 @@ function loadImperiumXML() {
 	});
 }
 
+function loadLeadersJSON() {
+	$.ajax({
+		type: "GET",
+	url: "/api/leaders.json",
+	dataType: "jaon",
+	success: function(json) {
+		var i = 1;
+		$(json).find('person').each(function(){
+			var id = $(this).find('id').text();
+			var name = $(this).find('firstname').text();
+			var surename = $(this).find('surename').text();
+			console.log(firstname + "-" + surename);
+			var circle = paper.circle(30, i*30, 20, 4);
+			var color = "#f77";
+			circle.attr("fill", color);
+			var silt1 = paper.text(80, i*30, name).attr({fill: "#f00"});
+			var silt2 = paper.text(180, i*30, mass).attr({fill: "#f00"});
+			var silt3 = paper.text(240, i*30, mass).attr({fill: "#f00"});
+			var ellip = paper.ellipse(37, i*30, 13, 8);
+			//var popeye = paper.popup(i*230, 20, "Laev", "left", 1);
+			i++;
+		});
+	}
+	});
+}
+
 function displayShips() {
 	initPaper();
 	var bot = paper.bottom, res = [];
@@ -269,6 +295,19 @@ function displayPlanets() {
 	}
 	$('#sidebar').empty();
 	console.log("shown ... suposed to be ...");
+}
+
+function displayLeaders() {
+	initPaper();
+	var bot = paper.bottom, res = [];
+	while (bot) {
+		//res.push(bot);
+		bot.hide();
+		bot = bot.next;
+	}
+	loadLeadersJSON();
+	$('#sidebar').empty();
+	console.log("hidden ... suposed to be ...");
 }
 
 $(document).ready(function()  {
