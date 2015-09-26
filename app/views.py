@@ -70,16 +70,16 @@ def api_stars():
                                   'cy' : star.body.coordY} for star in stars])
     return redirect(url_for('login'))
 
-@app.route('/api/persons.json')
+@app.route('/api/leaders.json')
 def api_persons():
     if 'user' in session:
         query = Person.query
         persons = query.all()
         #for item in stars:
         #    data.add("name":item.name)
-        return jsonify(persons=[{'firstname' : person.firstname,
+        return jsonify(persons=[{'person' : {'firstname' : person.firstname,
                                   'surename' : person.surename,
-                                  'stren' : person.stren} for person in persons])
+                                  'stren' : person.stren }} for person in persons])
     return redirect(url_for('login'))
 
 @app.route('/api/stars.xml', methods=["GET", "POST"])
