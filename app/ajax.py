@@ -4,13 +4,17 @@
 #
 
 import  os, random, exceptions
-from flask import render_template, flash, redirect, session, url_for, request, jsonify, json
-from app import app, db, postreciver
+from flask import render_template, flash, redirect, session, url_for, request, jsonify, json, Blueprint, render_template, abort
+from jinja2 import TemplateNotFound
+#from app import db
 from models import Game, Ship, Faction, Body, Star
 import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape
 
-@app.route('/ships')
+ajax = Blueprint('ajax', __name__,
+                        template_folder='templates')
+
+@ajax.route('/ships')
 def api_ships():
     if 'user' in session:
         shipquery = Ship.query.filter(Ship.body!=None)
@@ -27,7 +31,7 @@ def api_ships():
 #        return jsonify(stars=[{'name' : star.name, 'x' : star.coo} for star in stars])
 #    return ""
 
-@app.route('/stars')
+@ajax.route('/stars')
 def api_stars():
     if 'user' in session:
         query = Star.query
@@ -37,7 +41,7 @@ def api_stars():
         return jsonify(allstars=[{'name' : star.name, 'cx' : star.body.coordX, 'cy' : star.body.coordY} for star in stars])
     return redirect(url_for('login'))
 
-@app.route('/stars.xml', methods=["GET", "POST"])
+@ajax.route('/stars.xml', methods=["GET", "POST"])
 def xml_stars():
     if 'user' in session:
         root = ET.Element("root")
@@ -57,7 +61,7 @@ def xml_stars():
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
 
-@app.route('/star<int:star_id>.xml', methods=["GET", "POST"])
+@ajax.route('/star<int:star_id>.xml', methods=["GET", "POST"])
 def xml_star(star_id):
     if 'user' in session:
         root = ET.Element("root")
@@ -76,7 +80,7 @@ def xml_star(star_id):
         return ET.tostring(root, 'utf-8', method="xml")
     return redirect(url_for('login'))
 
-@app.route('/imperium.xml', methods=["GET", "POST"])
+@ajax.route('/imperium.xml', methods=["GET", "POST"])
 def xml_imperium():
     if 'user' in session:
         root = ET.Element("root")
