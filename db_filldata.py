@@ -18,7 +18,7 @@ def generateGalaxy():
     atms.append(Atmosphere("oxygen", 23.4))
     atms.append(None)
     for i in range(1, 100):
-        star = Star('Name ' + str(i),
+        star = Star('Star ' + str(i),
                randint(1, 100),
                randint(1, 100),
                randint(100, 20000))
@@ -29,7 +29,7 @@ def generateGalaxy():
                     star.body.coordY,
                     randint(10, 20))
             planet.atmosphere = atms[1]
-            system.planets.append(planet)
+            star.planets.append(planet)
         db.session.add(system)
 
 

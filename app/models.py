@@ -61,7 +61,7 @@ class Body(db.Model):
 class Star(db.Model):
     __tablename__    = 'star'
     id          = db.Column(db.Integer, primary_key=True)
-    name        = db.Column(db.String(), unique=True, nullable=False)
+    name        = db.Column(db.String(), unique=True, nullable=False) #unique=True,
     body_id     = db.Column(db.Integer, db.ForeignKey('body.id'),
                     nullable=False, index=True, unique=True)
     body        = db.relationship('Body', uselist=False,
@@ -149,9 +149,9 @@ class Planet(db.Model):
     colony      = db.relationship('Colony', uselist=False,
                         backref=db.backref('planet', uselist=False),
                         lazy='joined')
-    system_id   = db.Column(db.Integer, db.ForeignKey('system.id'),
+    star_id   = db.Column(db.Integer, db.ForeignKey('star.id'),
                         nullable=False, index=True)
-    system      = db.relationship('System',
+    star      = db.relationship('Star',
                         backref=db.backref('planets'),
                         lazy='joined')
 
@@ -167,7 +167,7 @@ class Planet(db.Model):
 class System(db.Model):
     __tablename__    = 'system'
     id          = db.Column(db.Integer, primary_key=True)
-    name        = db.Column(db.String(), unique=True, nullable=False)
+    name        = db.Column(db.String(), nullable=False) #unique=True,
 #    stars       = db.relationship("Star", backref="system", lazy="dynamic")
 #    planets     = db.relationship("Planet", backref="systems", lazy="dynamic")
 

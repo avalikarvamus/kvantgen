@@ -72,7 +72,7 @@ def api_stars():
         return jsonify(allstars=[{'name' : star.name,
                                   'cx' : star.body.coordX,
                                   'cy' : star.body.coordY} for star in stars])
-    return redirect(url_for('login'))
+    return noUser
 
 @app.route('/api/stars/<int:star_id>')
 def api_star(star_id):
@@ -94,7 +94,7 @@ def api_persons():
         return jsonify(persons=[{'person' : {'firstname' : person.firstname,
                                   'surename' : person.surename,
                                   'stren' : person.stren }} for person in persons])
-    return redirect(url_for('login'))
+    return noUser
 
 @app.route('/api/imperiums/')
 def api_imperiums():
@@ -106,7 +106,7 @@ def api_imperiums():
         return jsonify(persons=[{'person' : {'firstname' : person.firstname,
                                   'surename' : person.surename,
                                   'stren' : person.stren }} for person in persons])
-    return redirect(url_for('login'))
+    return noUser
 
 
 @app.route('/api/systems/', methods=["GET", "POST"])
@@ -114,33 +114,11 @@ def systems():
     if 'user' in session:
         root = ET.Element("root")
         systems = System.query.all()
-        for system in systems:
-            xsystem = ET.SubElement(root, "system")
-            for star in system.stars:
-                xstar = ET.SubElement(xsystem, "star")
-                ident = ET.SubElement(xstar, "id")
-                ident.text = str(star.id)
-                name = ET.SubElement(xstar, "name")
-                name.text = star.name
-                cx = ET.SubElement(xstar, "cx")
-                cx.text = str(star.body.coordX)
-                cy = ET.SubElement(xstar, "cy")
-                cy.text = str(star.body.coordY)
-                mass = ET.SubElement(xstar, "mass")
-                mass.text = str(star.body.mass)
-            for planet in system.planets:
-                xplanet = ET.SubElement(xsystem, "planet")
-                plident = ET.SubElement(xplanet, "id")
-                plident.text = str(planet.id)
-                plname = ET.SubElement(xplanet, "name")
-                plname.text = str(planet.name)
-                mass = ET.SubElement(xplanet, "mass")
-                mass.text = str(planet.body.mass)
         return jsonify(systems=[{'system' : {'star' : { 'name' : star.name,
                                   'cx' : star.body.coordX,
                                   'cy' : star.body.coordY,
                                   'mass' : star.body.mass } } for star in system.stars } for system in systems])
-    return redirect(url_for('login'))
+    return noUser
 
 
 #old XML part wich is used by current GUI demo
@@ -171,6 +149,7 @@ def xml_systems():
         systems = System.query.all()
         for system in systems:
             xsystem = ET.SubElement(root, "system")
+            planets = []
             for star in system.stars:
                 xstar = ET.SubElement(xsystem, "star")
                 ident = ET.SubElement(xstar, "id")
@@ -183,7 +162,8 @@ def xml_systems():
                 cy.text = str(star.body.coordY)
                 mass = ET.SubElement(xstar, "mass")
                 mass.text = str(star.body.mass)
-            for planet in system.planets:
+                planets = planets + star.planets
+            for planet in planets:
                 xplanet = ET.SubElement(xsystem, "planet")
                 plident = ET.SubElement(xplanet, "id")
                 plident.text = str(planet.id)
@@ -232,7 +212,7 @@ def xml_star(star_id):
         mass = ET.SubElement(xstar, "mass")
         mass.text = str(star.body.mass)
         planets = ET.SubElement(root, "planets")
-        for planet in star.system.planets:
+        for planet in star.planets:
                 xplanet = ET.SubElement(planets, "planet")
                 plident = ET.SubElement(xplanet, "id")
                 plident.text = str(planet.id)
