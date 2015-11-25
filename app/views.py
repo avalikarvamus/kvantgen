@@ -6,6 +6,7 @@
 import  os, random, exceptions, datetime
 from flask import (render_template, flash, redirect,
                 session, url_for, request, jsonify, json)
+from flask.ext.restplus import Api, Resource, fields
 from app import app, db, postreciver
 from models import Game, Ship, Faction, Body, Star, System, Person
 import xml.etree.ElementTree as ET

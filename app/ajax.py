@@ -6,96 +6,85 @@
 import  os, random, exceptions
 from flask import render_template, flash, redirect, session, url_for, request, jsonify, json, Blueprint, render_template, abort
 from jinja2 import TemplateNotFound
-#from app import db
+from app import app
 from models import Game, Ship, Faction, Body, Star
-import xml.etree.ElementTree as ET
-from xml.sax.saxutils import escape
+from flask.ext.restplus import Api, Resource, fields, apidoc
 
 ajax = Blueprint('ajax', __name__,
                         template_folder='templates')
 
-@ajax.route('/ships')
-def api_ships():
-    if 'user' in session:
-        shipquery = Ship.query.filter(Ship.body!=None)
-        ships = shipquery.all()
-        return jsonify(ships=[{'name' : ship.name, 'faction' : ship.faction.name } for ship in ships])
-    return ""
+api = Api(app, version='1.0', title='Todo API',
+    description='A simple TODO API extracted from the original flask-restful example',
+)
+
+ns = api.namespace('ajax', description='Kvantgen API operations')
 
 
-#@app.route('/api/stars')
-#def api_stars():
-#    if 'user' in session:
-#        starquery = Star.query
-#        stars = starquery.all()
-#        return jsonify(stars=[{'name' : star.name, 'x' : star.coo} for star in stars])
-#    return ""
+TODOS = {
+    'todo1': {'task': 'build an API'},
+    'todo2': {'task': '?????'},
+    'todo3': {'task': 'profit!'},
+}
 
-@ajax.route('/stars')
-def api_stars():
-    if 'user' in session:
-        query = Star.query
-        stars = query.all()
-        #for item in stars:
-        #    data.add("name":item.name)
-        return jsonify(allstars=[{'name' : star.name, 'cx' : star.body.coordX, 'cy' : star.body.coordY} for star in stars])
-    return redirect(url_for('login'))
+todo = api.model('Todo', {
+    'task': fields.String(required=True, description='The task details')
+})
 
-@ajax.route('/stars.xml', methods=["GET", "POST"])
-def xml_stars():
-    if 'user' in session:
-        root = ET.Element("root")
-        stars = Star.query.all()
-        for star in stars:
-            xstar = ET.SubElement(root, "star")
-            ident = ET.SubElement(xstar, "id")
-            ident.text = str(star.id)
-            name = ET.SubElement(xstar, "name")
-            name.text = star.name
-            cx = ET.SubElement(xstar, "cx")
-            cx.text = str(star.body.coordX)
-            cy = ET.SubElement(xstar, "cy")
-            cy.text = str(star.body.coordY)
-            mass = ET.SubElement(xstar, "mass")
-            mass.text = str(star.body.mass)
-        return ET.tostring(root, 'utf-8', method="xml")
-    return redirect(url_for('login'))
+listed_todo = api.model('ListedTodo', {
+    'id': fields.String(required=True, description='The todo ID'),
+    'todo': fields.Nested(todo, description='The Todo')
+})
 
-@ajax.route('/star<int:star_id>.xml', methods=["GET", "POST"])
-def xml_star(star_id):
-    if 'user' in session:
-        root = ET.Element("root")
-        star = Star.query.get(star_id)
-        xstar = ET.SubElement(root, "star")
-        ident = ET.SubElement(xstar, "id")
-        ident.text = str(star.id)
-        name = ET.SubElement(xstar, "name")
-        name.text = star.name
-        cx = ET.SubElement(xstar, "cx")
-        cx.text = str(star.body.coordX)
-        cy = ET.SubElement(xstar, "cy")
-        cy.text = str(star.body.coordY)
-        mass = ET.SubElement(xstar, "mass")
-        mass.text = str(star.body.mass)
-        return ET.tostring(root, 'utf-8', method="xml")
-    return redirect(url_for('login'))
 
-@ajax.route('/imperium.xml', methods=["GET", "POST"])
-def xml_imperium():
-    if 'user' in session:
-        root = ET.Element("root")
-        ships = Ship.query.all()
-        for ship in ships:
-            xship = ET.SubElement(root, "ship")
-            ident = ET.SubElement(xship, "id")
-            ident.text = str(ship.id)
-            name = ET.SubElement(xship, "name")
-            name.text = ship.name
-            cx = ET.SubElement(xship, "cx")
-            cx.text = str(ship.body.coordX)
-            cy = ET.SubElement(xship, "cy")
-            cy.text = str(ship.body.coordY)
-            mass = ET.SubElement(xship, "mass")
-            mass.text = str(ship.body.mass)
-        return ET.tostring(root, 'utf-8', method="xml")
-    return redirect(url_for('login'))
+def abort_if_todo_doesnt_exist(todo_id):
+    if todo_id not in TODOS:
+        api.abort(404, "API {} doesn't exist".format(todo_id))
+
+parser = api.parser()
+parser.add_argument('task', type=str, required=True, help='The task details', location='form')
+
+
+@ns.route('/<string:todo_id>')
+@api.doc(responses={404: 'Not found'}, params={'todo_id': 'The Todo ID'})
+class Todo(Resource):
+    '''Show a single todo item and lets you delete them'''
+    @api.doc(description='todo_id should be in {0}'.format(', '.join(TODOS.keys())))
+    @api.marshal_with(todo)
+    def get(self, todo_id):
+        '''Fetch a given resource'''
+        abort_if_todo_doesnt_exist(todo_id)
+        return TODOS[todo_id]
+
+    @api.doc(responses={204: 'Todo deleted'})
+    def delete(self, todo_id):
+        '''Delete a given resource'''
+        abort_if_todo_doesnt_exist(todo_id)
+        del TODOS[todo_id]
+        return '', 204
+
+    @api.doc(parser=parser)
+    @api.marshal_with(todo)
+    def put(self, todo_id):
+        '''Update a given resource'''
+        args = parser.parse_args()
+        task = {'task': args['task']}
+        TODOS[todo_id] = task
+        return task
+
+
+@ns.route('/')
+class TodoList(Resource):
+    '''Shows a list of all todos, and lets you POST to add new tasks'''
+    @api.marshal_list_with(listed_todo)
+    def get(self):
+        '''List all todos'''
+        return [{'id': id, 'todo': todo} for id, todo in TODOS.items()]
+
+    @api.doc(parser=parser)
+    @api.marshal_with(todo, code=201)
+    def post(self):
+        '''Create a todo'''
+        args = parser.parse_args()
+        todo_id = 'todo%d' % (len(TODOS) + 1)
+        TODOS[todo_id] = {'task': args['task']}
+        return TODOS[todo_id], 201
