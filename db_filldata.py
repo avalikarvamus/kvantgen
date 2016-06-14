@@ -35,7 +35,7 @@ def generateGalaxy():
 
 def fillData():
     generateGalaxy()
-    neutral = Faction(name="", race=u"")
+    neutral = Faction(name=" ", race=u" ")
     madulased = Faction(name="shshhh", race=u"madulased")
     inimesed = Faction(name="inimesed", race=u"humanoidid")
     db.session.add(neutral)

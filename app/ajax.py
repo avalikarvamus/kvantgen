@@ -8,7 +8,7 @@ from flask import render_template, flash, redirect, session, url_for, request, j
 from jinja2 import TemplateNotFound
 from app import app
 from models import Game, Ship, Faction, Body, Star
-from flask.ext.restplus import Api, Resource, fields, apidoc
+from flask_restplus import Api, Resource, fields, apidoc
 
 ajax = Blueprint('ajax', __name__,
                         template_folder='templates')
